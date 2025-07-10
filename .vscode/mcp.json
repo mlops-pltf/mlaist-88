@@ -1,0 +1,15 @@
+{
+    "servers": {
+        "sentimentAnalysis": {
+            "type": "stdio",
+            "command": "/usr/local/bin/npx",
+            "args": [
+                "-y", 
+                "mcp-remote", 
+                "https://mlops-pltf-mcp-sentiment.hf.space/gradio_api/mcp/sse", 
+                "--transport", 
+                "sse-only"
+            ]
+        }
+    }
+}
