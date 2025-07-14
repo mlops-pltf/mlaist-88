@@ -5,6 +5,7 @@ Stores events in a JSON file that the MCP server can read.
 """
 
 import json
+import traceback
 from datetime import datetime
 from pathlib import Path
 from aiohttp import web
@@ -14,12 +15,13 @@ EVENTS_FILE = Path(__file__).parent / "github_events.json"
 
 async def handle_webhook(request):
     """Handle incoming GitHub webhook"""
+    print("Received request:", request.method, request.path)
     try:
         data = await request.json()
         
         # Create event record
         event = {
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now().isoformat(),
             "event_type": request.headers.get("X-GitHub-Event", "unknown"),
             "action": data.get("action"),
             "workflow_run": data.get("workflow_run"),
@@ -44,11 +46,19 @@ async def handle_webhook(request):
         
         return web.json_response({"status": "received"})
     except Exception as e:
+        traceback.print_stack()
         return web.json_response({"error": str(e)}, status=400)
+
+
+async def handle_get(request):
+    print("Received request:", request.method, request.path)
+    return web.json_response({"status": "reached"})
+
 
 # Create app and add route
 app = web.Application()
 app.router.add_post('/webhook/github', handle_webhook)
+app.router.add_get('/webhook/github', handle_get)
 
 if __name__ == '__main__':
     print("🚀 Starting webhook server on http://localhost:8080")
