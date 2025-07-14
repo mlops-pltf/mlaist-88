@@ -33,7 +33,7 @@ DEFAULT_TEMPLATES = {
 }
 
 # File where webhook server stores events
-EVENTS_FILE = Path(__file__) / "github_events.json"
+EVENTS_FILE = Path(__file__).parent / "github_events.json"
 
 # Type mapping for PR templates
 TYPE_MAPPING = {
